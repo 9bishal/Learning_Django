@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Details List</title>
+</head>
+<body>
+    <h1>All User Details</h1>
+    <a href="{% url 'user_form' %}">Add New User</a>
+    <ul>
+        {% for user in users %}
+        <li>
+            {{ user.name }} - {{ user.email }} - {{ user.age }}
+            <a href="{% url 'user_edit' user.pk %}">Edit</a>
+            <a href="{% url 'user_delete' user.pk %}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
