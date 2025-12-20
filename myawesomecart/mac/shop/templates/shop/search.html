@@ -1,0 +1,322 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Search Products - My Awesome Cart{% endblock %}
+
+{% block css %}
+    .search-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 10px;
+    }
+
+    .search-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .search-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 3rem;
+    }
+
+    .search-form .form-group input {
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .search-form .form-group input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .btn-search {
+        background-color: #667eea;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        height: 100%;
+    }
+
+    .btn-search:hover {
+        background-color: #5568d3;
+    }
+
+    .product-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-card img {
+        height: 220px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .product-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .product-card .card-title {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 0.75rem;
+    }
+
+    .product-card .card-text {
+        font-size: 0.85rem;
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        min-height: 2.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 0;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state h5 {
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #999;
+        margin-bottom: 2rem;
+    }
+
+    .search-results-header {
+        margin-bottom: 2rem;
+    }
+
+    .results-count {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    .filter-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .filter-section h5 {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .filter-option label {
+        margin-bottom: 0.5rem;
+        color: #666;
+    }
+
+    .filter-option input {
+        margin-right: 0.5rem;
+    }
+{% endblock %}
+
+{% block body %}
+<!-- Search Hero Section -->
+<div class="search-hero">
+    <h1>🔍 Search Products</h1>
+    <p>Find exactly what you're looking for with our powerful search tool.</p>
+</div>
+
+<!-- Search Form Section -->
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="search-form">
+            <form method="GET" action="">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="query" 
+                                placeholder="Search by product name, category, or keyword..." 
+                                value="{{ query }}"
+                            >
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-search w-100">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <small class="form-text text-muted">
+                💡 Tip: Try searching for product names, categories, or features.
+            </small>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Section (if needed) -->
+<!-- Uncomment when filters are implemented -->
+<!--
+<div class="row">
+    <div class="col-md-3">
+        <div class="filter-section">
+            <h5>Filters</h5>
+            <div class="filter-option">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="price_low" value="low">
+                    <label class="form-check-label" for="price_low">
+                        Under ₹1000
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <!-- Search Results will go here -->
+    </div>
+</div>
+-->
+
+<!-- Search Results Section -->
+<!-- TODO: Display actual search results when implemented -->
+
+<!-- Empty State (shown before searching) -->
+<div class="empty-state">
+    <div class="empty-state-icon">🔎</div>
+    <h5>Start Searching</h5>
+    <p>Use the search box above to find products in our store.</p>
+</div>
+
+<!-- Trending/Popular Products Section -->
+<section class="my-5">
+    <h3 style="font-weight: 600; color: #333; margin-bottom: 2rem;">Popular Products</h3>
+    <!-- TODO: Display trending products based on sales/views -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="product-card">
+                <img src="{% static 'shop/product image.jpeg' %}" alt="Popular Product">
+                <div class="card-body">
+                    <h5 class="card-title">Popular Item 1</h5>
+                    <p class="card-text">Check out our best-selling product</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="font-weight-bold">₹999</span>
+                        <a href="#" class="btn btn-sm btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="product-card">
+                <img src="{% static 'shop/product image.jpeg' %}" alt="Popular Product">
+                <div class="card-body">
+                    <h5 class="card-title">Popular Item 2</h5>
+                    <p class="card-text">Customers love this product</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="font-weight-bold">₹1299</span>
+                        <a href="#" class="btn btn-sm btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="product-card">
+                <img src="{% static 'shop/product image.jpeg' %}" alt="Popular Product">
+                <div class="card-body">
+                    <h5 class="card-title">Popular Item 3</h5>
+                    <p class="card-text">Trending in our store</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="font-weight-bold">₹799</span>
+                        <a href="#" class="btn btn-sm btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="product-card">
+                <img src="{% static 'shop/product image.jpeg' %}" alt="Popular Product">
+                <div class="card-body">
+                    <h5 class="card-title">Popular Item 4</h5>
+                    <p class="card-text">Highly recommended item</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="font-weight-bold">₹1499</span>
+                        <a href="#" class="btn btn-sm btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Tips Section -->
+<section class="my-5">
+    <h3 style="text-align: center; font-weight: 600; color: #333; margin-bottom: 2rem;">Search Tips</h3>
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📦</div>
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 0.5rem;">Product Name</h5>
+                <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                    Search by exact product name or partial keywords.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">🏷️</div>
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 0.5rem;">Category</h5>
+                <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                    Search by category like "Electronics" or "Clothing".
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">✨</div>
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 0.5rem;">Features</h5>
+                <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                    Try searching for product features or specifications.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">💡</div>
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 0.5rem;">Keywords</h5>
+                <p style="color: #666; font-size: 0.9rem; margin: 0;">
+                    Use general keywords to find related products.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

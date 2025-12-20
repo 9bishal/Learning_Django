@@ -1,0 +1,1 @@
+Hi i am representing the staic file from the blog app of my django project

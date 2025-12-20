@@ -1,0 +1,266 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Track Your Order - My Awesome Cart{% endblock %}
+
+{% block css %}
+    .tracker-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 10px;
+    }
+
+    .tracker-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .tracker-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 3rem;
+    }
+
+    .tracker-form .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .tracker-form .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .btn-track {
+        background-color: #667eea;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-track:hover {
+        background-color: #5568d3;
+    }
+
+    .order-status-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .order-timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .timeline-item {
+        display: flex;
+        margin-bottom: 2rem;
+        position: relative;
+        padding-left: 3rem;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 30px;
+        height: 30px;
+        background-color: #667eea;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid white;
+        box-shadow: 0 0 0 3px #667eea;
+    }
+
+    .timeline-item.completed::before {
+        content: '✓';
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .timeline-item.active::before {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        50% {
+            box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.3);
+        }
+    }
+
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        left: 14px;
+        top: 30px;
+        width: 2px;
+        height: 3.5rem;
+        background-color: #ddd;
+    }
+
+    .timeline-item:last-child::after {
+        display: none;
+    }
+
+    .timeline-content h5 {
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .timeline-content p {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 0;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state h5 {
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #999;
+        margin-bottom: 2rem;
+    }
+{% endblock %}
+
+{% block body %}
+<!-- Tracker Hero Section -->
+<div class="tracker-hero">
+    <h1>Track Your Order</h1>
+    <p>Enter your order ID to see the current status and estimated delivery date.</p>
+</div>
+
+<!-- Tracker Form Section -->
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="tracker-form">
+            <h3 style="font-weight: 600; color: #333; margin-bottom: 1.5rem;">Enter Order Details</h3>
+            <form method="GET" action="">
+                <div class="form-group">
+                    <label for="order_id">Order ID</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="order_id" 
+                        name="order_id" 
+                        placeholder="Enter your order ID (e.g., ORD-2025-001234)" 
+                        required
+                    >
+                    <small class="form-text text-muted">
+                        You can find your order ID in your confirmation email or account page.
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-track w-100">
+                    Track Order
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Order Status Section (displays after form submission) -->
+<!-- This is a template for when an order is found -->
+<!-- TODO: Display actual order details when implemented -->
+
+<!-- Empty State (shown when no order found or before searching) -->
+<div class="empty-state">
+    <div class="empty-state-icon">📦</div>
+    <h5>No Order Found</h5>
+    <p>Enter your order ID above to check the status of your order.</p>
+</div>
+
+<!-- Helpful Information Section -->
+<section class="my-5">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">📧 How to find your Order ID?</h5>
+                <p style="color: #666; margin: 0; line-height: 1.6;">
+                    Your order ID was sent to you in the order confirmation email. Look for "Order ID" or "Order Number" 
+                    in the email subject or body. You can also find it in your account dashboard under "My Orders".
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">⏱️ What do the statuses mean?</h5>
+                <ul style="color: #666; margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Processing:</strong> We're preparing your order</li>
+                    <li><strong>Shipped:</strong> Your order is on its way</li>
+                    <li><strong>In Transit:</strong> Package is with carrier</li>
+                    <li><strong>Delivered:</strong> Order has arrived</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="my-5">
+    <h3 style="text-align: center; font-weight: 600; color: #333; margin-bottom: 3rem;">Tracking Questions?</h3>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">🕐 When will my order arrive?</h5>
+                <p style="color: #666; margin: 0;">
+                    Most orders are delivered within 3-5 business days from the shipping date. 
+                    Some remote locations may take longer.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">📍 Can I change my delivery address?</h5>
+                <p style="color: #666; margin: 0;">
+                    If your order hasn't shipped yet, contact us immediately. Once shipped, 
+                    you'll need to refuse delivery or contact your carrier.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Support Link -->
+<div style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 10px; margin: 2rem 0;">
+    <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">Need Help?</h5>
+    <p style="color: #666; margin-bottom: 1.5rem;">
+        Can't find your order or have questions about tracking?
+    </p>
+    <a href="/shop/contact/" class="btn btn-primary" style="background-color: #667eea; border: none; padding: 0.75rem 2rem;">
+        Contact Support
+    </a>
+</div>
+{% endblock %}

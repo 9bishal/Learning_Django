@@ -1,0 +1,268 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - My Awesome Cart{% endblock %}
+
+{% block css %}
+    .contact-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 10px;
+    }
+
+    .contact-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .contact-hero p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .contact-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .contact-info {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .contact-info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+    }
+
+    .contact-info-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .contact-icon {
+        font-size: 2rem;
+        margin-right: 1.5rem;
+        color: #667eea;
+    }
+
+    .contact-info h5 {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-info p {
+        color: #666;
+        margin: 0;
+    }
+
+    .btn-submit {
+        background-color: #667eea;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #5568d3;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+{% endblock %}
+
+{% block body %}
+<!-- Contact Hero Section -->
+<div class="contact-hero">
+    <h1>Get In Touch</h1>
+    <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+</div>
+
+<!-- Contact Information and Form Section -->
+<div class="row">
+    <!-- Contact Information Column -->
+    <div class="col-md-4 mb-4">
+        <div class="contact-info">
+            <h3 style="font-weight: 600; color: #333; margin-bottom: 2rem;">Contact Information</h3>
+
+            <!-- Email -->
+            <div class="contact-info-item">
+                <div class="contact-icon">✉️</div>
+                <div>
+                    <h5>Email</h5>
+                    <p><a href="mailto:info@myawesomecart.com" style="color: #667eea; text-decoration: none;">info@myawesomecart.com</a></p>
+                    <p style="font-size: 0.9rem; color: #999;">Response within 24 hours</p>
+                </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="contact-info-item">
+                <div class="contact-icon">📞</div>
+                <div>
+                    <h5>Phone</h5>
+                    <p><a href="tel:+15551234567" style="color: #667eea; text-decoration: none;">+1 (555) 123-4567</a></p>
+                    <p style="font-size: 0.9rem; color: #999;">Monday to Friday, 9 AM - 5 PM EST</p>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="contact-info-item">
+                <div class="contact-icon">📍</div>
+                <div>
+                    <h5>Address</h5>
+                    <p>123 Shopping Street<br>New York, NY 10001<br>United States</p>
+                </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="contact-info-item">
+                <div class="contact-icon">🕐</div>
+                <div>
+                    <h5>Business Hours</h5>
+                    <p>Monday - Friday: 9 AM - 5 PM EST<br>Saturday: 10 AM - 3 PM EST<br>Sunday: Closed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Form Column -->
+    <div class="col-md-8">
+        <!-- Success/Error Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="contact-form">
+            <h3 style="font-weight: 600; color: #333; margin-bottom: 1.5rem;">Send us a Message</h3>
+            <form method="POST" action="">
+                {% csrf_token %}
+
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+
+                <!-- Phone Field -->
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number (optional)">
+                </div>
+
+                <!-- Subject Field -->
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select class="form-control" id="subject" name="subject" required>
+                        <option value="">-- Select a subject --</option>
+                        <option value="product_inquiry">Product Inquiry</option>
+                        <option value="order_issue">Order Issue</option>
+                        <option value="shipping_question">Shipping Question</option>
+                        <option value="feedback">Feedback</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Message Field -->
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Enter your message here..." required></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-submit w-100">
+                        Send Message
+                    </button>
+                </div>
+
+                <!-- Help Text -->
+                <p style="font-size: 0.85rem; color: #999; margin: 0;">
+                    We'll get back to you as soon as possible. Thank you for reaching out!
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<section class="my-5">
+    <h3 style="text-align: center; font-weight: 600; color: #333; margin-bottom: 3rem;">Frequently Asked Questions</h3>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">📦 What's your shipping policy?</h5>
+                <p style="color: #666; margin: 0;">
+                    We ship all orders within 1-2 business days. Most deliveries arrive within 3-5 business days depending on your location.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">💳 What payment methods do you accept?</h5>
+                <p style="color: #666; margin: 0;">
+                    We accept all major credit cards, PayPal, and digital wallets for your convenience.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">🔄 What's your return policy?</h5>
+                <p style="color: #666; margin: 0;">
+                    We offer 30-day returns on most items. If you're not satisfied, simply contact us to start the return process.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+                <h5 style="font-weight: 600; color: #333; margin-bottom: 1rem;">🔒 Is my data secure?</h5>
+                <p style="color: #666; margin: 0;">
+                    Yes! We use industry-standard SSL encryption to protect all your personal and payment information.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

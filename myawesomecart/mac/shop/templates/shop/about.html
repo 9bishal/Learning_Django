@@ -1,0 +1,178 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}About Us - My Awesome Cart{% endblock %}
+
+{% block css %}
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 10px;
+    }
+
+    .about-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .about-hero p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .feature-box {
+        text-align: center;
+        padding: 2rem;
+        border-radius: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e0e0e0;
+        background: white;
+    }
+
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .team-card {
+        text-align: center;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+
+    .team-card img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 4px solid #667eea;
+    }
+{% endblock %}
+
+{% block body %}
+<!-- About Us Hero Section -->
+<div class="about-hero">
+    <h1>About My Awesome Cart</h1>
+    <p>Your trusted destination for quality products and exceptional customer service since 2020.</p>
+</div>
+
+<!-- Our Story Section -->
+<section class="my-5">
+    <div class="row align-items-center">
+        <div class="col-md-6 mb-4">
+            <h2 style="font-weight: 600; color: #333; margin-bottom: 1rem;">Our Story</h2>
+            <p style="line-height: 1.8; color: #666;">
+                My Awesome Cart was founded with a simple mission: to make online shopping easy, affordable, and enjoyable for everyone. 
+                What started as a small startup has grown into a trusted e-commerce platform serving thousands of happy customers worldwide.
+            </p>
+            <p style="line-height: 1.8; color: #666;">
+                We believe that quality products don't have to be expensive. Our commitment to finding the best deals and offering 
+                competitive prices is what sets us apart from the competition.
+            </p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <img src="{% static 'shop/product image.jpeg' %}" alt="Our Story" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="my-5">
+    <h2 style="text-align: center; font-weight: 600; color: #333; margin-bottom: 3rem;">Why Choose Us?</h2>
+    <div class="row">
+        <!-- Feature 1: Fast Shipping -->
+        <div class="col-md-4 mb-4">
+            <div class="feature-box">
+                <div class="feature-icon">🚚</div>
+                <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Fast Shipping</h4>
+                <p style="color: #666; margin: 0;">
+                    We guarantee fast and reliable delivery to your doorstep within 3-5 business days.
+                </p>
+            </div>
+        </div>
+
+        <!-- Feature 2: Quality Products -->
+        <div class="col-md-4 mb-4">
+            <div class="feature-box">
+                <div class="feature-icon">⭐</div>
+                <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Quality Assured</h4>
+                <p style="color: #666; margin: 0;">
+                    All our products are carefully selected and quality-tested before reaching your hands.
+                </p>
+            </div>
+        </div>
+
+        <!-- Feature 3: Customer Support -->
+        <div class="col-md-4 mb-4">
+            <div class="feature-box">
+                <div class="feature-icon">💬</div>
+                <h4 style="font-weight: 600; margin-bottom: 0.5rem;">24/7 Support</h4>
+                <p style="color: #666; margin: 0;">
+                    Our dedicated support team is always here to help with any questions or concerns.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Values Section -->
+<section class="my-5" style="background: #f8f9fa; padding: 2rem; border-radius: 10px;">
+    <h2 style="text-align: center; font-weight: 600; color: #333; margin-bottom: 2rem;">Our Values</h2>
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <div style="padding: 1.5rem;">
+                <h5 style="font-weight: 600; color: #667eea;">Integrity</h5>
+                <p style="color: #666; font-size: 0.95rem;">
+                    We operate with complete transparency and honesty in all our dealings.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div style="padding: 1.5rem;">
+                <h5 style="font-weight: 600; color: #667eea;">Innovation</h5>
+                <p style="color: #666; font-size: 0.95rem;">
+                    We constantly improve our services to provide the best experience.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div style="padding: 1.5rem;">
+                <h5 style="font-weight: 600; color: #667eea;">Customer Focus</h5>
+                <p style="color: #666; font-size: 0.95rem;">
+                    Your satisfaction is our top priority in everything we do.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div style="padding: 1.5rem;">
+                <h5 style="font-weight: 600; color: #667eea;">Sustainability</h5>
+                <p style="color: #666; font-size: 0.95rem;">
+                    We care about the environment and practice responsible business.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="my-5 text-center">
+    <h2 style="font-weight: 600; color: #333; margin-bottom: 2rem;">Ready to Shop?</h2>
+    <p style="font-size: 1.1rem; color: #666; margin-bottom: 2rem;">
+        Browse our amazing collection of products and find what you're looking for.
+    </p>
+    <a href="/" class="btn btn-primary btn-lg" style="background-color: #667eea; border: none; padding: 0.75rem 2.5rem; font-size: 1rem;">
+        Start Shopping
+    </a>
+</section>
+{% endblock %}
