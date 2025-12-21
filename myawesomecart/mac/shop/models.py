@@ -151,6 +151,54 @@ class OrderItem(models.Model):
 
 
 # ============================================
+# CART MODEL
+# ============================================
+class Cart(models.Model):
+    """
+    Represents items in a user's shopping cart.
+    
+    Each Cart record = one item in the user's cart
+    When user adds product → new Cart row created
+    When user increases qty → quantity field updated
+    When user decreases qty to 0 → row deleted
+    
+    Fields:
+    - user: Which user owns this cart item
+    - product: Which product is in cart
+    - quantity: How many of this product
+    - date_added: When added to cart
+    """
+    
+    # Foreign Key to User - Links cart to specific user
+    # When user deleted, all their cart items deleted
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items')
+    
+    # Foreign Key to Product - Which product is in cart
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    
+    # Quantity of product in cart (default 1)
+    quantity = models.IntegerField(default=1)
+    
+    # When was this added to cart
+    date_added = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        """String representation for admin panel"""
+        return f"{self.user.username} - {self.product.product_name} (qty: {self.quantity})"
+    
+    class Meta:
+        """Metadata for model"""
+        verbose_name = "Cart Item"
+        verbose_name_plural = "Cart Items"
+        # Each user can only have one cart item per product
+        unique_together = ['user', 'product']
+        
+    def get_total_price(self):
+        """Calculate total price for this cart item"""
+        return self.product.price * self.quantity
+
+
+# ============================================
 # USEFUL FIELD TYPES REFERENCE
 # ============================================
 """

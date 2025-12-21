@@ -6,9 +6,27 @@ Views are Python functions that receive a web request and return a web response.
 """
 
 from math import ceil
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Product
+from django.contrib.auth.decorators import login_required
+from .models import Product, Cart
+from django.contrib.auth.models import User
+
+
+# ============================================
+# HELPER FUNCTIONS
+# ============================================
+
+def get_cart_count(user):
+    """
+    Helper function to get total items in cart for a user
+    
+    Usage: cart_count = get_cart_count(request.user)
+    """
+    if user.is_authenticated:
+        return Cart.objects.filter(user=user).count()
+    return 0
+
 
 # ============================================
 # PRODUCT LISTING VIEW
@@ -21,6 +39,7 @@ def index(request):
     - products: All products from database
     - no_of_slides: Number of carousel slides needed (groups of 4 products)
     - range: Range object for template iteration
+    - cart_count: Number of items in user's shopping cart (shows in navbar)
     
     Explanation:
     Each carousel slide shows 4 products in a row.
@@ -42,11 +61,15 @@ def index(request):
     # Example: 12 products = 12//4 = 3 slides
     nslides = n // 4 + ceil((n / 4) - (n // 4))
     
+    # Get cart count for current user (for navbar badge)
+    cart_count = get_cart_count(request.user)
+    
     # Dictionary of data to pass to template
     params = {
         'no_of_slides': nslides,           # Number of carousel slides
         'range': range(nslides),            # Range object for looping in template
-        'products': products                # All products to display
+        'products': products,               # All products to display
+        'cart_count': cart_count            # Number of items in cart (shows in navbar)
     }
     
     # Render the template with context data
@@ -60,9 +83,11 @@ def index(request):
 def about(request):
     """
     Display the about page.
-    Currently just renders a basic template.
+    
+    Pass cart_count for navbar badge
     """
-    return render(request, 'shop/about.html')
+    cart_count = get_cart_count(request.user)
+    return render(request, 'shop/about.html', {'cart_count': cart_count})
 
 
 # ============================================
@@ -86,12 +111,14 @@ def contact(request):
     2. Send confirmation email to user
     3. Send notification email to admin
     """
+    cart_count = get_cart_count(request.user)
+    
     if request.method == 'POST':
         # TODO: Process form submission
         # Validate data, save to database, send emails
         pass
     
-    return render(request, 'shop/contact.html')
+    return render(request, 'shop/contact.html', {'cart_count': cart_count})
 
 
 # ============================================
@@ -115,11 +142,13 @@ def tracker(request):
     - Query Order model
     - Display current order status and timeline
     """
+    cart_count = get_cart_count(request.user)
+    
     if request.method == 'GET':
         order_id = request.GET.get('order_id')
         # TODO: Query Order by ID and display tracking info
     
-    return render(request, 'shop/tracker.html')
+    return render(request, 'shop/tracker.html', {'cart_count': cart_count})
 
 
 # ============================================
@@ -150,7 +179,8 @@ def search(request):
         products = Product.objects.filter(product_name__icontains=query)
         return render(request, 'shop/search_results.html', {'products': products})
     """
-    return render(request, 'shop/search.html')
+    cart_count = get_cart_count(request.user)
+    return render(request, 'shop/search.html', {'cart_count': cart_count})
 
 
 # ============================================
@@ -172,6 +202,7 @@ def productview(request):
         product = Product.objects.get(product_id=product_id)
         return render(request, 'shop/product_detail.html', {'product': product})
     """
+    cart_count = get_cart_count(request.user)
     return HttpResponse("This is product view page")
 
 
@@ -193,4 +224,178 @@ def checkout(request):
     
     Note: Method name has typo 'checkpout' instead of 'checkout'
     """
+    cart_count = get_cart_count(request.user)
     return HttpResponse("This is checkout page")
+
+
+# ============================================
+# SHOPPING CART VIEWS
+# ============================================
+
+@login_required(login_url='/admin/login/')
+def add_to_cart(request, product_id):
+    """
+    Add product to cart or increase quantity if already exists
+    
+    URL: /shop/add-to-cart/{product_id}/
+    
+    Logic:
+    1. Get product by ID
+    2. Check if product already in user's cart
+    3. If yes → increase quantity by 1
+    4. If no → create new cart item
+    5. Redirect to previous page
+    """
+    try:
+        # Get the product from database
+        product = Product.objects.get(product_id=product_id)
+        
+        # Check if this product already in this user's cart
+        cart_item = Cart.objects.filter(user=request.user, product=product).first()
+        
+        if cart_item:
+            # Product already in cart - increase quantity
+            cart_item.quantity += 1
+            cart_item.save()
+        else:
+            # Product not in cart - add new item
+            Cart.objects.create(
+                user=request.user,
+                product=product,
+                quantity=1
+            )
+        
+        # Redirect back to shop or product page
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    
+    except Product.DoesNotExist:
+        # Product not found - redirect to shop
+        return redirect('/shop/')
+
+
+@login_required(login_url='/admin/login/')
+def view_cart(request):
+    """
+    Display all items in user's shopping cart
+    
+    URL: /shop/cart/
+    
+    Shows:
+    - All products in user's cart
+    - Quantity of each product
+    - Total price calculation
+    - Increase/Decrease/Delete buttons
+    """
+    # Get all items in this user's cart
+    cart_items = Cart.objects.filter(user=request.user)
+    
+    # Calculate total price
+    total_price = 0
+    for item in cart_items:
+        total_price += item.get_total_price()
+    
+    # Get cart count for navbar
+    cart_count = cart_items.count()
+    
+    params = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'cart_count': cart_count
+    }
+    
+    return render(request, 'shop/cart.html', params)
+
+
+@login_required(login_url='/admin/login/')
+def increase_qty(request, cart_id):
+    """
+    Increase quantity of item in cart by 1
+    
+    URL: /shop/increase-qty/{cart_id}/
+    
+    Example:
+    - User has Laptop x2 in cart
+    - Clicks + button
+    - Quantity becomes x3
+    """
+    try:
+        # Get cart item for this user
+        cart_item = Cart.objects.get(id=cart_id, user=request.user)
+        
+        # Increase quantity
+        cart_item.quantity += 1
+        cart_item.save()
+    
+    except Cart.DoesNotExist:
+        # Cart item not found or doesn't belong to user
+        pass
+    
+    # Redirect back to cart
+    return redirect('/shop/cart/')
+
+
+@login_required(login_url='/admin/login/')
+def decrease_qty(request, cart_id):
+    """
+    Decrease quantity of item in cart by 1
+    
+    URL: /shop/decrease-qty/{cart_id}/
+    
+    Logic:
+    - If quantity > 1 → decrease by 1
+    - If quantity = 1 → delete the item from cart
+    
+    Example:
+    - User has Laptop x2 in cart
+    - Clicks − button
+    - Quantity becomes x1
+    - Click − again → item deleted
+    """
+    try:
+        # Get cart item for this user
+        cart_item = Cart.objects.get(id=cart_id, user=request.user)
+        
+        if cart_item.quantity > 1:
+            # Quantity is more than 1 - just decrease it
+            cart_item.quantity -= 1
+            cart_item.save()
+        else:
+            # Quantity is 1 - delete the item completely
+            cart_item.delete()
+    
+    except Cart.DoesNotExist:
+        # Cart item not found or doesn't belong to user
+        pass
+    
+    # Redirect back to cart
+    return redirect('/shop/cart/')
+
+
+@login_required(login_url='/admin/login/')
+def delete_from_cart(request, cart_id):
+    """
+    Remove item from cart completely (regardless of quantity)
+    
+    URL: /shop/delete-from-cart/{cart_id}/
+    
+    This is a "Delete" button - removes item immediately
+    regardless of how many are in cart
+    
+    Example:
+    - User has Laptop x5 in cart
+    - Clicks Delete button
+    - All 5 removed at once
+    """
+    try:
+        # Get cart item for this user
+        cart_item = Cart.objects.get(id=cart_id, user=request.user)
+        
+        # Delete the item
+        cart_item.delete()
+    
+    except Cart.DoesNotExist:
+        # Cart item not found or doesn't belong to user
+        pass
+    
+    # Redirect back to cart
+    return redirect('/shop/cart/')

@@ -91,6 +91,7 @@
     </style>
 </head>
 
+
 <body>
     <!-- HEADER / NAVBAR - Appears on all pages -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
@@ -125,7 +126,12 @@
                         <a class="nav-link" href="/shop/tracker/">Track Order</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">🛒 Cart</a>
+                        <a class="nav-link" href="/shop/cart/" style="position: relative;">
+                            🛒 Cart
+                            {% if cart_count > 0 %}
+                            <span class="badge badge-danger" style="position: absolute; top: -8px; right: -8px; background-color: #dc3545; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">{{ cart_count }}</span>
+                            {% endif %}
+                        </a>
                     </li>
                 </ul>
 
