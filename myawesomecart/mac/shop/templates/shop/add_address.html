@@ -1,0 +1,251 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Add Address - My Awesome Cart{% endblock %}
+
+{% block css %}
+<style>
+    .address-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .address-container h2 {
+        margin-top: 0;
+        margin-bottom: 2rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .form-group label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .btn-container {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-submit {
+        flex: 1;
+        padding: 0.75rem;
+        font-weight: 600;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 0.75rem;
+        font-weight: 600;
+        background-color: #6c757d;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .btn-cancel:hover {
+        background-color: #5a6268;
+        color: #fff;
+    }
+
+    .error-messages {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+    }
+
+    .error-messages ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+
+    .error-messages li {
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="address-container">
+    <h2>📍 Add Shipping Address</h2>
+
+    {% if form.non_field_errors %}
+    <div class="error-messages">
+        <strong>Error:</strong>
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="POST" novalidate>
+        {% csrf_token %}
+
+        <!-- Label -->
+        <div class="form-group">
+            <label for="{{ form.label.id_for_label }}">Address Label (e.g., Home, Work)</label>
+            {% if form.label.errors %}
+            {{ form.label }}
+            <div class="error-messages" style="margin-top: 0.5rem;">
+                {% for error in form.label.errors %}
+                <small>{{ error }}</small><br>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.label }}
+            {% endif %}
+        </div>
+
+        <!-- Street Address -->
+        <div class="form-group">
+            <label for="{{ form.street_address.id_for_label }}">Street Address</label>
+            {% if form.street_address.errors %}
+            {{ form.street_address }}
+            <div class="error-messages" style="margin-top: 0.5rem;">
+                {% for error in form.street_address.errors %}
+                <small>{{ error }}</small><br>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.street_address }}
+            {% endif %}
+        </div>
+
+        <!-- City and State -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.city.id_for_label }}">City</label>
+                {% if form.city.errors %}
+                {{ form.city }}
+                <div class="error-messages" style="margin-top: 0.5rem;">
+                    {% for error in form.city.errors %}
+                    <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.city }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.state.id_for_label }}">State/Province</label>
+                {% if form.state.errors %}
+                {{ form.state }}
+                <div class="error-messages" style="margin-top: 0.5rem;">
+                    {% for error in form.state.errors %}
+                    <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.state }}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ZIP Code and Country -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.zip_code.id_for_label }}">ZIP Code</label>
+                {% if form.zip_code.errors %}
+                {{ form.zip_code }}
+                <div class="error-messages" style="margin-top: 0.5rem;">
+                    {% for error in form.zip_code.errors %}
+                    <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.zip_code }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.country.id_for_label }}">Country</label>
+                {% if form.country.errors %}
+                {{ form.country }}
+                <div class="error-messages" style="margin-top: 0.5rem;">
+                    {% for error in form.country.errors %}
+                    <small>{{ error }}</small><br>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.country }}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+            <label for="{{ form.phone.id_for_label }}">Phone Number</label>
+            {% if form.phone.errors %}
+            {{ form.phone }}
+            <div class="error-messages" style="margin-top: 0.5rem;">
+                {% for error in form.phone.errors %}
+                <small>{{ error }}</small><br>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.phone }}
+            {% endif %}
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-container">
+            <button type="submit" class="btn-submit">💾 Save Address</button>
+            <a href="/shop/profile/" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

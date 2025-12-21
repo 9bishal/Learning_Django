@@ -5,7 +5,7 @@ This file customizes how models appear in Django Admin interface.
 """
 
 from django.contrib import admin
-from .models import Product, Order, OrderItem, Cart
+from .models import Product, Order, OrderItem, Cart, UserProfile, Address
 
 
 # ============================================
@@ -39,15 +39,39 @@ class CartAdmin(admin.ModelAdmin):
 
 
 # ============================================
+# USER PROFILE ADMIN
+# ============================================
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    """Customize UserProfile display in admin"""
+    list_display = ['user', 'phone', 'city', 'state', 'created_at']
+    list_filter = ['created_at', 'country']
+    search_fields = ['user__username', 'phone', 'city']
+    readonly_fields = ['created_at', 'updated_at']
+
+
+# ============================================
+# ADDRESS ADMIN
+# ============================================
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    """Customize Address display in admin"""
+    list_display = ['user', 'address_type', 'city', 'state', 'is_default']
+    list_filter = ['address_type', 'is_default', 'country']
+    search_fields = ['user__username', 'city', 'street_address']
+    readonly_fields = ['created_at', 'updated_at']
+
+
+# ============================================
 # ORDER ADMIN
 # ============================================
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     """Customize Order display in admin"""
-    list_display = ['order_id', 'customer_name', 'email', 'status', 'order_date']
-    list_filter = ['status', 'order_date']
-    search_fields = ['customer_name', 'email', 'order_id']
-    readonly_fields = ['order_id', 'order_date']
+    list_display = ['order_id', 'user', 'total_price', 'status', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['user__username', 'order_id']
+    readonly_fields = ['order_id', 'created_at', 'updated_at']
 
 
 # ============================================
@@ -57,5 +81,5 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     """Customize OrderItem display in admin"""
     list_display = ['order', 'product', 'quantity', 'price']
-    list_filter = ['order__order_date']
+    list_filter = ['order__created_at']
     search_fields = ['product__product_name', 'order__order_id']

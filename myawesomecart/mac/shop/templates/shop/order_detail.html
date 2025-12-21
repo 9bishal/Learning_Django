@@ -1,0 +1,481 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Order #{{ order.id }} - My Awesome Cart{% endblock %}
+
+{% block css %}
+<style>
+    .order-detail-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .order-detail-header {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .order-detail-header h2 {
+        margin: 0 0 0.5rem 0;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .order-detail-header p {
+        margin: 0;
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .order-detail-right {
+        text-align: right;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        margin-top: 0.5rem;
+    }
+
+    .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .status-processing {
+        background-color: #cfe2ff;
+        color: #084298;
+    }
+
+    .status-shipped {
+        background-color: #cff4fc;
+        color: #055160;
+    }
+
+    .status-delivered {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .status-cancelled {
+        background-color: #f8d7da;
+        color: #842029;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-section {
+        background-color: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-section h3 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        color: #333;
+        font-weight: 600;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 0.5rem;
+    }
+
+    .detail-item {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .detail-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .detail-value {
+        color: #666;
+        margin-top: 0.25rem;
+        font-size: 0.95rem;
+    }
+
+    .items-section {
+        grid-column: 1 / -1;
+    }
+
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .items-table thead {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .items-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .items-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .items-table tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .item-name {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .item-sku {
+        color: #999;
+        font-size: 0.85rem;
+    }
+
+    .item-price {
+        color: #666;
+    }
+
+    .item-qty {
+        text-align: center;
+    }
+
+    .item-total {
+        font-weight: 600;
+        color: #333;
+        text-align: right;
+    }
+
+    .summary-section {
+        grid-column: 1 / -1;
+    }
+
+    .summary-rows {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .summary-row {
+        display: contents;
+    }
+
+    .summary-label {
+        font-weight: 500;
+        color: #666;
+    }
+
+    .summary-value {
+        text-align: right;
+        color: #333;
+    }
+
+    .summary-row.total .summary-label,
+    .summary-row.total .summary-value {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .summary-divider {
+        grid-column: 1 / -1;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .timeline {
+        position: relative;
+        padding: 0;
+    }
+
+    .timeline-item {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    .timeline-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 19px;
+        top: 40px;
+        width: 2px;
+        height: calc(100% + 0.5rem);
+        background-color: #ddd;
+    }
+
+    .timeline-dot {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #007bff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .timeline-item.completed .timeline-dot {
+        background-color: #28a745;
+    }
+
+    .timeline-content {
+        padding-top: 0.5rem;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .timeline-date {
+        color: #999;
+        font-size: 0.85rem;
+    }
+
+    .btn-back {
+        display: inline-block;
+        margin-top: 2rem;
+        padding: 0.75rem 1.5rem;
+        background-color: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .items-table {
+            font-size: 0.85rem;
+        }
+
+        .items-table th,
+        .items-table td {
+            padding: 0.75rem;
+        }
+
+        .order-detail-header {
+            flex-direction: column;
+        }
+
+        .order-detail-right {
+            margin-top: 1rem;
+            text-align: left;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="order-detail-container">
+    <!-- Header -->
+    <div class="order-detail-header">
+        <div>
+            <h2>Order #{{ order.id }}</h2>
+            <p>Placed on {{ order.created_at|date:"M d, Y \a\t g:i A" }}</p>
+        </div>
+        <div class="order-detail-right">
+            <span class="status-badge status-{{ order.status|lower }}">
+                {{ order.status|upper }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="detail-grid">
+        <!-- Billing Information -->
+        <div class="detail-section">
+            <h3>💳 Billing Information</h3>
+            <div class="detail-item">
+                <div class="detail-label">Customer</div>
+                <div class="detail-value">{{ user.get_full_name|default:user.username }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Email</div>
+                <div class="detail-value">{{ user.email }}</div>
+            </div>
+            {% if user.userprofile.phone %}
+            <div class="detail-item">
+                <div class="detail-label">Phone</div>
+                <div class="detail-value">{{ user.userprofile.phone }}</div>
+            </div>
+            {% endif %}
+            <div class="detail-item">
+                <div class="detail-label">Payment Method</div>
+                <div class="detail-value">{{ order.payment_method|default:"Not specified" }}</div>
+            </div>
+        </div>
+
+        <!-- Shipping Information -->
+        <div class="detail-section">
+            <h3>📍 Shipping Address</h3>
+            {% if order.address %}
+            <div class="detail-item">
+                <div class="detail-label">Address</div>
+                <div class="detail-value">
+                    {{ order.address.street_address }}<br>
+                    {{ order.address.city }}, {{ order.address.state }} {{ order.address.zip_code }}<br>
+                    {{ order.address.country }}
+                </div>
+            </div>
+            {% if order.address.phone %}
+            <div class="detail-item">
+                <div class="detail-label">Delivery Phone</div>
+                <div class="detail-value">{{ order.address.phone }}</div>
+            </div>
+            {% endif %}
+            {% else %}
+            <p style="color: #999;">No address information available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Items -->
+        <div class="detail-section items-section">
+            <h3>📦 Order Items</h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th style="width: 100px;">Price</th>
+                        <th style="width: 80px;">Qty</th>
+                        <th style="width: 100px; text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.orderitem_set.all %}
+                    <tr>
+                        <td>
+                            <div class="item-name">{{ item.product.title }}</div>
+                            <div class="item-sku">SKU: {{ item.product.sku|default:"N/A" }}</div>
+                        </td>
+                        <td class="item-price">${{ item.price|floatformat:2 }}</td>
+                        <td class="item-qty">{{ item.quantity }}</td>
+                        <td class="item-total">${{ item.get_total|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary -->
+        <div class="detail-section summary-section">
+            <h3>💰 Order Summary</h3>
+            <div class="summary-rows">
+                {% if order.subtotal %}
+                <div class="summary-row">
+                    <div class="summary-label">Subtotal</div>
+                    <div></div>
+                    <div class="summary-value">${{ order.subtotal|floatformat:2 }}</div>
+                </div>
+                {% endif %}
+
+                {% if order.tax_amount %}
+                <div class="summary-row">
+                    <div class="summary-label">Tax ({{ order.tax_rate|default:"0" }}%)</div>
+                    <div></div>
+                    <div class="summary-value">${{ order.tax_amount|floatformat:2 }}</div>
+                </div>
+                {% endif %}
+
+                {% if order.shipping_cost %}
+                <div class="summary-row">
+                    <div class="summary-label">Shipping</div>
+                    <div></div>
+                    <div class="summary-value">${{ order.shipping_cost|floatformat:2 }}</div>
+                </div>
+                {% endif %}
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row total">
+                    <div class="summary-label">Total</div>
+                    <div></div>
+                    <div class="summary-value">${{ order.total_price|floatformat:2 }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Status Timeline -->
+        <div class="detail-section" style="grid-column: 1 / -1;">
+            <h3>📋 Order Status Timeline</h3>
+            <div class="timeline">
+                <div class="timeline-item {% if order.status != 'pending' %}completed{% endif %}">
+                    <div class="timeline-dot">1</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Order Placed</div>
+                        <div class="timeline-date">{{ order.created_at|date:"M d, Y \a\t g:i A" }}</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item {% if order.status not in 'pending' %}completed{% endif %}">
+                    <div class="timeline-dot">2</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Order Processing</div>
+                        <div class="timeline-date">{% if order.status != 'pending' %}{{ order.updated_at|date:"M d, Y" }}{% else %}Pending{% endif %}</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item {% if order.status in 'shipped,delivered' %}completed{% endif %}">
+                    <div class="timeline-dot">3</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Shipped</div>
+                        <div class="timeline-date">{% if order.status in 'shipped,delivered' %}{{ order.updated_at|date:"M d, Y" }}{% else %}Pending{% endif %}</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item {% if order.status == 'delivered' %}completed{% endif %}">
+                    <div class="timeline-dot">4</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Delivered</div>
+                        <div class="timeline-date">{% if order.status == 'delivered' %}{{ order.updated_at|date:"M d, Y" }}{% else %}Pending{% endif %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/shop/order-history/" class="btn-back">← Back to Orders</a>
+</div>
+{% endblock %}

@@ -1,0 +1,336 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}My Profile - My Awesome Cart{% endblock %}
+
+{% block css %}
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+    }
+
+    .profile-header {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-details h2 {
+        margin: 0;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .profile-details p {
+        margin: 0.5rem 0 0 0;
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-edit {
+        padding: 0.75rem 1.5rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .sections {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .section {
+        background-color: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .section h3 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        color: #333;
+        font-weight: 600;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 0.5rem;
+    }
+
+    .section p {
+        margin: 0.5rem 0;
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .section strong {
+        color: #333;
+    }
+
+    .address-item {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        border-left: 3px solid #007bff;
+    }
+
+    .address-item h5 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .address-item p {
+        margin: 0.25rem 0;
+        font-size: 0.9rem;
+    }
+
+    .address-actions {
+        margin-top: 0.75rem;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .address-actions a,
+    .address-actions button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit-small {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-edit-small:hover {
+        background-color: #218838;
+        color: white;
+    }
+
+    .btn-delete-small {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-delete-small:hover {
+        background-color: #c82333;
+        color: white;
+    }
+
+    .btn-add-address {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-add-address:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .no-addresses {
+        color: #999;
+        font-style: italic;
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+
+    .empty-message {
+        color: #999;
+        font-style: italic;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .profile-info {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .profile-actions {
+            justify-content: center;
+            width: 100%;
+        }
+
+        .sections {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-info">
+            <div class="profile-avatar">👤</div>
+            <div class="profile-details">
+                <h2>{{ user.username }}</h2>
+                <p>{{ user.email }}</p>
+                <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">
+                    Member since {{ user.date_joined|date:"M d, Y" }}
+                </p>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <a href="/shop/profile/edit/" class="btn-edit">✏️ Edit Profile</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="sections">
+        <!-- Personal Information -->
+        <div class="section">
+            <h3>📋 Personal Information</h3>
+            {% if profile %}
+            <p>
+                <strong>First Name:</strong><br>
+                {{ profile.first_name|default:"Not provided" }}
+            </p>
+            <p>
+                <strong>Last Name:</strong><br>
+                {{ profile.last_name|default:"Not provided" }}
+            </p>
+            <p>
+                <strong>Phone:</strong><br>
+                {{ profile.phone|default:"Not provided" }}
+            </p>
+            <p>
+                <strong>Bio:</strong><br>
+                {{ profile.bio|default:"Not provided" }}
+            </p>
+            {% else %}
+            <p class="empty-message">No profile information yet. <a href="/shop/profile/edit/">Add your details</a></p>
+            {% endif %}
+        </div>
+
+        <!-- Addresses -->
+        <div class="section">
+            <h3>📍 Shipping Addresses</h3>
+            {% if addresses %}
+            <div>
+                {% for address in addresses %}
+                <div class="address-item">
+                    <h5>{{ address.label|default:"Address" }}</h5>
+                    <p>{{ address.street_address }}</p>
+                    <p>{{ address.city }}, {{ address.state }} {{ address.zip_code }}</p>
+                    <p>{{ address.country }}</p>
+                    <div class="address-actions">
+                        <a href="/shop/address/{{ address.id }}/edit/" class="btn-edit-small">Edit</a>
+                        <form method="POST" action="/shop/address/{{ address.id }}/delete/" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-delete-small" onclick="return confirm('Delete this address?');">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="/shop/address/add/" class="btn-add-address">➕ Add New Address</a>
+            {% else %}
+            <p class="no-addresses">No addresses saved yet.</p>
+            <a href="/shop/address/add/" class="btn-add-address">➕ Add Address</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="section" style="grid-column: 1 / -1;">
+        <h3>📦 Recent Orders</h3>
+        {% if orders %}
+        <div style="overflow-x: auto;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders|slice:":5" %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                        <td>${{ order.total_price|floatformat:2 }}</td>
+                        <td>
+                            <span class="badge badge-info">{{ order.status|upper }}</span>
+                        </td>
+                        <td>
+                            <a href="/shop/order/{{ order.id }}/" class="btn btn-sm btn-primary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <p style="text-align: right; margin-top: 1rem;">
+            <a href="/shop/order-history/" style="color: #007bff; text-decoration: none; font-weight: 600;">View All Orders →</a>
+        </p>
+        {% else %}
+        <p class="empty-message">No orders yet. <a href="/shop/">Start shopping!</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
